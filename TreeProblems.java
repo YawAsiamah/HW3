@@ -20,12 +20,15 @@ public class TreeProblems {
    */
   
   public static Set<Integer> different(Set<Integer> setA, Set<Integer> setB) {
+    Set<Integer> tempA = new TreeSet<>(setA); // Copy of setA
+    Set<Integer> tempB = new TreeSet<>(setB); // Copy of setB
 
-    // INSERT CODE HERE - DO NOT FORGET TO PLACE YOUR NAME ABOVE
-    //
-    // This can be done numerous ways, but once such will only that
-    // *several* lines of code. Hint: create two temporary TreeSets and utilize the
-    // methods retainAll(), addAll(), and removeAll(). But in the end, get something to work.
+    tempA.removeAll(setB); // Remove elements from setA that are also in setB
+    tempB.removeAll(setA); // Remove elements from setB that are also in setA
+
+    setA.clear();  // Clear original setA
+    setA.addAll(tempA); // Add remaining elements from tempA
+    setA.addAll(tempB); // Add remaining elements from tempB
 
     return setA;
   }
@@ -40,7 +43,10 @@ public class TreeProblems {
 
   public static void removeEven(Map<Integer, String> treeMap) {
 
-    // INSERT CODE HERE.
+    Set<Integer> evenKeys = new HashSet<>(treeMap.keySet()); // Copy all keys
+
+    evenKeys.removeIf(key -> key % 2 != 0); // Keep only even keys
+    evenKeys.forEach(treeMap::remove); // Remove even keys from the TreeMap
 
     return;
   }
@@ -54,11 +60,29 @@ public class TreeProblems {
    */
 
   public boolean treesEqual(Map<Integer, String> tree1,Map<Integer, String> tree2 ) {
-
-    // INSERT CODE HERE
-
-    return false;
-
+    if (tree1 == null && tree2 == null) {
+      return true;
   }
+  
+  // If only one of them is null, they are not equal
+  if (tree1 == null || tree2 == null) {
+      return false;
+  }
+
+  // Compare sizes first; if different, they are not equal
+  if (tree1.size() != tree2.size()) {
+      return false;
+  }
+
+  // Compare the key-value pairs of both maps
+  for (Map.Entry<Integer, String> entry : tree1.entrySet()) {
+      if (!tree2.containsKey(entry.getKey()) || !tree2.get(entry.getKey()).equals(entry.getValue())) {
+          return false;
+      }
+  }
+
+  return true; // If all checks pass, the maps are equal
+}
+  
 
 } // end treeProblems class

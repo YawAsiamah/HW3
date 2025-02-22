@@ -1,6 +1,6 @@
 
 /*
- * *** YOUR NAME GOES HERE / YOUR SECTION NUMBER ***
+ * *** Yaw Asiamah / 002 ***
  *
  * This java file is a Java object implementing simple AVL Tree.
  * You are to complete the deleteElement method.
@@ -342,7 +342,54 @@ class LUC_AVLTree {
      */
 
     private Node deleteElement(int value, Node node) {
-
+            if (node == null) {
+                return null; // Value not found
+            }
+    
+            // Locate node to delete
+            if (value < node.value) {
+                node.leftChild = deleteElement(value, node.leftChild);
+            } else if (value > node.value) {
+                node.rightChild = deleteElement(value, node.rightChild);
+            } else {
+                // Node found
+                if (node.leftChild == null) {
+                    return node.rightChild; // No left child
+                } else if (node.rightChild == null) {
+                    return node.leftChild; // No right child
+                } else {
+                    // Two children
+                    Node successor = minValueNode(node.rightChild);
+                    node.value = successor.value;
+                    node.rightChild = deleteElement(successor.value, node.rightChild);
+                }
+            }
+    
+            // Update height
+            node.height = getMaxHeight(getHeight(node.leftChild), getHeight(node.rightChild)) + 1;
+    
+            // Check balance factor
+            int balance = getBalanceFactor(node);
+    
+            // Left-heavy cases
+            if (balance > 1) {
+                if (getBalanceFactor(node.leftChild) >= 0) {
+                    return LLRotation(node); // LL case
+                } else {
+                    return LRRotation(node); // LR case
+                }
+            }
+    
+            // Right-heavy cases
+            if (balance < -1) {
+                if (getBalanceFactor(node.rightChild) <= 0) {
+                    return RRRotation(node); // RR case
+                } else {
+                    return RLRotation(node); // RL case
+                }
+            }
+    
+            
         /*
          * ADD CODE HERE
          * 
